@@ -1,4 +1,6 @@
-﻿namespace AdanUI
+﻿using AdanUI.Pages;
+
+namespace AdanUI
 {
     public partial class App : Application
     {

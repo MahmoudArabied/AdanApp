@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:local="clr-namespace:AdanUI;assembly=AdanUI"
+            xmlns:pages="clr-namespace:AdanUI.Pages"
             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
             android:TabbedPage.ToolbarPlacement="Bottom"
-            x:Class="AdanUI.AppTabbedPage">
+            x:Class="AdanUI.Pages.AppTabbedPage">
 
     <NavigationPage Title="One" IconImageSource="{StaticResource TabOne}">
         <x:Arguments>
-            <local:MainPage Title="One" />
+            <pages:MainPage Title="One" />
         </x:Arguments>
     </NavigationPage>
     <NavigationPage Title="Two" IconImageSource="{StaticResource TabTwo}">
         <x:Arguments>
-            <local:MainPage Title="Two" />
+            <pages:MainPage Title="Two" />
         </x:Arguments>
     </NavigationPage>
     <NavigationPage Title="Three" IconImageSource="{StaticResource TabThree}">
         <x:Arguments>
-            <local:MainPage Title="Three" />
+            <pages:MainPage Title="Three" />
         </x:Arguments>
     </NavigationPage>
     <NavigationPage Title="Four" IconImageSource="{StaticResource TabFour}">
         <x:Arguments>
-            <local:MainPage Title="Four" />
+            <pages:MainPage Title="Four" />
         </x:Arguments>
     </NavigationPage>
 

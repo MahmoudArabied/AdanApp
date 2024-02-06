@@ -1,4 +1,4 @@
-﻿namespace AdanUI
+﻿namespace AdanUI.Pages
 {
     public partial class AppShell : Shell
     {
