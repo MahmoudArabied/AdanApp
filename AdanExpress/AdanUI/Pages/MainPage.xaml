@@ -1,10 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AdanUI.Controls"
+             xmlns:localViewModels="clr-namespace:AdanUI.ViewModels"
              x:Class="AdanUI.Pages.MainPage">
 
+    <ContentPage.BindingContext>
+        <localViewModels:AdanViewModel />
+    </ContentPage.BindingContext>
+ 
+    <ContentPage.Resources>
+        <ControlTemplate x:Key="AdanCardControlTemplate">
+            <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
+               Background="{Binding CardColor}"
+              Stroke="{Binding BorderColor}"
+               StrokeThickness="1"
+               StrokeShape="RoundRectangle 50,50,50,50"                    
+              Padding="8"
+              HorizontalOptions="Center"
+              VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                       Offset="10,10"
+                       Radius="14"
+                       Opacity="0.8" />
+                </Border.Shadow>
+
+                <Grid RowDefinitions="75,4,Auto" ColumnDefinitions="275">
+                    <ProgressBar Progress="0.5" ProgressColor="Orange" />
+                    
+                    <Label Text="{Binding AdanName}"
+                      FontAttributes="Bold"
+                      FontSize="20"
+                      VerticalTextAlignment="Center"
+                      HorizontalTextAlignment="Start" />
+                    
+                    <BoxView Grid.Row="1"
+                        BackgroundColor="{Binding BorderColor}"
+                        HeightRequest="2"
+                        HorizontalOptions="Fill" />
+                    
+                    <Label Grid.Row="2"
+                      Text="{Binding AdanTime}"
+                      VerticalTextAlignment="Start"
+                      VerticalOptions="Fill"
+                      HorizontalOptions="Fill" />
+                    
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+        <DataTemplate x:Key="AdanWidgetTemplate">
+            <controls:CardView BorderColor="DarkGray"
+                               CardTitle="{Binding AdanName}"
+                               CardDescription="{Binding AdanTime}"
+                               ControlTemplate="{StaticResource AdanCardControlTemplate}" />
+        </DataTemplate>
+        
+        <ControlTemplate x:Key="CardViewControlTemplate">
+            <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
+                   Background="{Binding CardColor}"
+                  Stroke="{Binding BorderColor}"
+                   StrokeThickness="1"
+                   StrokeShape="RoundRectangle 12,12,12,12"                    
+                  Padding="8"
+                  HorizontalOptions="Center"
+                  VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                           Offset="10,10"
+                           Radius="14"
+                           Opacity="0.8" />
+                </Border.Shadow>
+                <Grid RowDefinitions="75,4,Auto" ColumnDefinitions="275">
+                    <Label Text="{Binding CardTitle}"
+                          FontAttributes="Bold"
+                          FontSize="20"
+                          VerticalTextAlignment="Center"
+                          HorizontalTextAlignment="Start" />
+                    <BoxView Grid.Row="1"
+                            BackgroundColor="{Binding BorderColor}"
+                            HeightRequest="2"
+                            HorizontalOptions="Fill" />
+                    <Label Grid.Row="2"
+                          Text="{Binding CardDescription}"
+                          VerticalTextAlignment="Start"
+                          VerticalOptions="Fill"
+                          HorizontalOptions="Fill" />
+                    <Button Text="Delete"
+                           Command="{Binding Source={RelativeSource AncestorType={x:Type localViewModels:PeopleViewModel}}, Path=DeletePersonCommand}"
+                           CommandParameter="{Binding CardTitle}"
+                           HorizontalOptions="End" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+        
+        <DataTemplate x:Key="PersonTemplate">
+            <controls:CardView BorderColor="DarkGray"
+                               CardTitle="{Binding Name}"
+                               CardDescription="{Binding Description}"
+                               ControlTemplate="{StaticResource CardViewControlTemplate}" />
+        </DataTemplate>
+    </ContentPage.Resources>
+
     <ScrollView>
-        <VerticalStackLayout
+        <!--<VerticalStackLayout
             Padding="30,0"
             Spacing="25">
             <Image
@@ -30,7 +130,17 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
-        </VerticalStackLayout>
+        </VerticalStackLayout>-->
+
+        <!--<VerticalStackLayout Margin="30" Spacing="30"
+                 BindableLayout.ItemsSource="{Binding People}"
+                 BindableLayout.ItemTemplate="{StaticResource PersonTemplate}" />-->
+
+
+        <VerticalStackLayout Margin="30" Spacing="30"
+                 BindableLayout.ItemsSource="{Binding AdanCollection}"
+                 BindableLayout.ItemTemplate="{StaticResource AdanWidgetTemplate}" />
+
     </ScrollView>
 
 </ContentPage>
