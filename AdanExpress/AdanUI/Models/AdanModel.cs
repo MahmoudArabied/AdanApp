@@ -7,26 +7,26 @@ using static AdanUI.Domain.AppConstants;
 
 namespace AdanUI.Models
 {
-    public class AdanModel
+    public class AdanModel : ViewModelBase
     {
         /// <summary>
         /// Type of adan time
         /// </summary>
-        public eTimes AdanTag;
+        public eTimes AdanTag { get; set; }
 
         /// <summary>
         /// The name of Adan
         /// </summary>
-        public string AdanName;
+        public string AdanName { get; set; }
 
         /// <summary>
         /// Time of Adan
         /// </summary>
-        public string AdanTime;
+        public string AdanTime { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public Color BorderColor;
+        public Color BorderColor { get; set; }
     }
 }

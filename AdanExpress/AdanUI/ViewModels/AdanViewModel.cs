@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,29 +15,24 @@ namespace AdanUI.ViewModels
     {
         public ObservableCollection<AdanModel> AdanCollection { get; set; }
 
-        public ICommand DeletePersonCommand { get; private set; }
-
         public AdanViewModel()
         {
             AdanCollection = new ObservableCollection<AdanModel>();
 
             foreach (eTimes timeType in Enum.GetValues(typeof(eTimes)))
             {
-                //string strPrayTime = GetDefinedTime(timeType, prayDatetime.times);
-
                 if (timeType != eTimes.Imsak &&
-                    timeType != eTimes.Sunrise &&
+                    //timeType != eTimes.Sunrise &&
                     timeType != eTimes.Sunset &&
                     timeType != eTimes.Midnight)
                 {
-                    AdanModel oModel = new AdanModel()
+                    AdanCollection.Add(new AdanModel
                     {
                         AdanTag = timeType,
                         AdanName = timeType.ToString(),
                         AdanTime = DateTime.Now.ToString(),
                         BorderColor = Colors.Azure,
-                    };
-                    AdanCollection.Add(oModel);
+                    });
                 }
             }
         }
