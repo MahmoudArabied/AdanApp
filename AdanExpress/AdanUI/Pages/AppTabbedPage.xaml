@@ -6,24 +6,24 @@
             android:TabbedPage.ToolbarPlacement="Bottom"
             x:Class="AdanUI.Pages.AppTabbedPage">
 
-    <NavigationPage Title="One" IconImageSource="{StaticResource TabOne}">
+    <NavigationPage Title="Home" IconImageSource="{StaticResource Home}">
         <x:Arguments>
-            <pages:MainPage Title="One" />
+            <pages:MainPage Title="Home" />
         </x:Arguments>
     </NavigationPage>
-    <NavigationPage Title="Two" IconImageSource="{StaticResource TabTwo}">
+    <NavigationPage Title="Qibla" IconImageSource="{StaticResource Compass}">
         <x:Arguments>
-            <pages:MainPage Title="Two" />
+            <pages:MainPage Title="Qibla" />
         </x:Arguments>
     </NavigationPage>
-    <NavigationPage Title="Three" IconImageSource="{StaticResource TabThree}">
+    <NavigationPage Title="Settings" IconImageSource="{StaticResource TabThree}">
         <x:Arguments>
-            <pages:MainPage Title="Three" />
+            <pages:MainPage Title="Settings" />
         </x:Arguments>
     </NavigationPage>
-    <NavigationPage Title="Four" IconImageSource="{StaticResource TabFour}">
+    <NavigationPage Title="About" IconImageSource="{StaticResource TabFour}">
         <x:Arguments>
-            <pages:MainPage Title="Four" />
+            <pages:MainPage Title="About" />
         </x:Arguments>
     </NavigationPage>
 

@@ -25,8 +25,13 @@ namespace AdanUI.Models
         public string AdanTime { get; set; }
 
         /// <summary>
-        /// 
+        /// The background color of progress bar
         /// </summary>
-        public Color BorderColor { get; set; }
+        public Color ProgressColor { get; set; }
+
+        /// <summary>
+        /// The background image of a given widget
+        /// </summary>
+        public string BackgroundImage { get; set; }
     }
 }

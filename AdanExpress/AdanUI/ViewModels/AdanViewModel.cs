@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using static AdanUI.Domain.AppConstants;
+using static AdanUI.Domain.Util;
+
 
 namespace AdanUI.ViewModels
 {
@@ -30,11 +32,19 @@ namespace AdanUI.ViewModels
                     {
                         AdanTag = timeType,
                         AdanName = timeType.ToString(),
-                        AdanTime = DateTime.Now.ToString(),
-                        BorderColor = Colors.Azure,
+                        AdanTime = DateTime.Now.ToString(TimeOnlyFormat),
+                        ProgressColor = Colors.Azure,
+                        BackgroundImage= "time_adan_off.png"
                     });
                 }
             }
+
+            AdanCollection.First(x => x.AdanTag == eTimes.Fajr).BackgroundImage = "fajir_off.png";
+            AdanCollection.First(x => x.AdanTag == eTimes.Sunrise).BackgroundImage = "sunrise_off.png";
+            AdanCollection.First(x => x.AdanTag == eTimes.Dhuhr).BackgroundImage = "dahur_off.png";
+            AdanCollection.First(x => x.AdanTag == eTimes.Asr).BackgroundImage = "asr_off.png";
+            AdanCollection.First(x => x.AdanTag == eTimes.Maghrib).BackgroundImage = "maghrib_off.png";
+            AdanCollection.First(x => x.AdanTag == eTimes.Isha).BackgroundImage = "isha_off.png";
         }
     }
 }
