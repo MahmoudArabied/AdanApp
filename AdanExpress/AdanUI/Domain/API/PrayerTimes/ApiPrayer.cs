@@ -1,4 +1,6 @@
-﻿namespace AdanUI.Domain.API.PrayerTimes
+﻿using static AdanUI.Domain.API.PrayerTimes.ApiPrayer;
+
+namespace AdanUI.Domain.API.PrayerTimes
 {
     /// <summary>
     /// Based on documentation from https://prayertimes.date/api
@@ -8,7 +10,7 @@
         /// <summary>
         /// Define type of Times request
         /// </summary>
-        public enum enumApiTimesOption
+        public enum enumApiPrayerTimesOption
         {
             /// <summary>
             /// Get Today Times
@@ -46,7 +48,7 @@
             Month,
         }
 
-        public enum enumLocationType
+        public enum enumApiPrayerLocationType
         {
             /// <summary>
             /// Location by City
@@ -67,7 +69,7 @@
         /// <summary>
         /// A unqiue app key
         /// </summary>
-        private const string KEY = "&AdanAPP";
+        private const string KEY = "&AdanExpressAPP";
 
         /// <summary>
         /// The main API's URL of the Pray Zone service 
@@ -125,7 +127,7 @@
         /// Or: index_0: longitude, index_1:latitude, index_2: elevation
         /// Or: index_0: IP addrese version 4</param>
         /// <returns>The API request URL, it can be null</returns>
-        public static string? getUrlRequest(enumApiTimesOption eTime, enumLocationType eLocationType, string[] arrLocationInput, string[] argsDateOptions, int iSchool = 4)
+        public static string? getUrlRequest(enumApiPrayerTimesOption eTime, enumApiPrayerLocationType eLocationType, string[] arrLocationInput, string[] argsDateOptions, int iSchool = 4)
         {
             string strRequestUrl = MAIN_API_URL + GetTimePart(eTime) + URL_END + "?";
             string? strParameters = GetLocationPart(eLocationType, arrLocationInput);
@@ -184,19 +186,19 @@
         /// <summary>
         /// Get the time base part of the URL
         /// </summary>
-        /// <param name="eTime">enum option of time <see cref="enumApiTimesOption"/></param>
+        /// <param name="eTime">enum option of time <see cref="enumApiPrayerTimesOption"/></param>
         /// <returns>Defined part of times URL, possible of undefined</returns>
-        private static string GetTimePart(enumApiTimesOption eTime)
+        private static string GetTimePart(enumApiPrayerTimesOption eTime)
         {
             return eTime switch
             {
-                enumApiTimesOption.Today => TODAY,
-                enumApiTimesOption.Tomorrow => TOMORROW,
-                enumApiTimesOption.ThisWeek => THIS_WEEK,
-                enumApiTimesOption.ThisMonth => THIS_MONTH,
-                enumApiTimesOption.Dates => DATES,
-                enumApiTimesOption.Day => DAY,
-                enumApiTimesOption.Month => MONTH,
+                enumApiPrayerTimesOption.Today => TODAY,
+                enumApiPrayerTimesOption.Tomorrow => TOMORROW,
+                enumApiPrayerTimesOption.ThisWeek => THIS_WEEK,
+                enumApiPrayerTimesOption.ThisMonth => THIS_MONTH,
+                enumApiPrayerTimesOption.Dates => DATES,
+                enumApiPrayerTimesOption.Day => DAY,
+                enumApiPrayerTimesOption.Month => MONTH,
                 _ => "UNDEFINED",
             };
         }
@@ -204,13 +206,13 @@
         /// <summary>
         /// Prepare the location part of API URL request
         /// </summary>
-        /// <param name="eLocationType">The location part of URL <see cref="enumLocationType"/></param>
+        /// <param name="eLocationType">The location part of URL <see cref="enumApiPrayerLocationType"/></param>
         /// <param name="args">Parameters of location: 
         /// index_0 : city, 
         /// Or: index_0: longitude, index_1:latitude, index_2: elevation
         /// Or: index_0: IP addrese version 4</param>
         /// <returns></returns>
-        private static string? GetLocationPart(enumLocationType eLocationType, string[] args)
+        private static string? GetLocationPart(enumApiPrayerLocationType eLocationType, string[] args)
         {
             if (args.Length == 0)
             {
@@ -219,9 +221,9 @@
 
             return eLocationType switch
             {
-                enumLocationType.City => "city=" + args[0],
-                enumLocationType.LongLatitudeElavation => "longitude=" + args[0] + "&latitude=" + args[1] + "&elevation=" + args[2],
-                enumLocationType.IP => "ip=" + args[0],
+                enumApiPrayerLocationType.City => "city=" + args[0],
+                enumApiPrayerLocationType.LongLatitudeElavation => "longitude=" + args[0] + "&latitude=" + args[1] + "&elevation=" + args[2],
+                enumApiPrayerLocationType.IP => "ip=" + args[0],
                 _ => null,
             };
         }

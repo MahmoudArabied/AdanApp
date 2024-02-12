@@ -13,12 +13,30 @@ using static AdanUI.Domain.Util;
 
 namespace AdanUI.ViewModels
 {
-    public class AdanViewModel
+    public class AdanViewModel : ViewModelBase
     {
         public ObservableCollection<AdanModel> AdanCollection { get; set; }
 
+        //public ICommand PerformSearch => new Command<string>((string query) =>
+        //{
+        //    SearchResults = DataService.GetSearchResults(query);
+        //});
+
+        //private List<string> searchResults = DataService.Fruits;
+        //public List<string> SearchResults
+        //{
+        //    get => searchResults;
+        //    set => SetProperty(ref searchResults, value);
+        //}
+   
         public AdanViewModel()
         {
+            initiateAdanCollection();
+        }
+
+        private void initiateAdanCollection()
+        {
+
             AdanCollection = new ObservableCollection<AdanModel>();
 
             foreach (eTimes timeType in Enum.GetValues(typeof(eTimes)))
@@ -34,7 +52,7 @@ namespace AdanUI.ViewModels
                         AdanName = timeType.ToString(),
                         AdanTime = DateTime.Now.ToString(TimeOnlyFormat),
                         ProgressColor = Colors.Azure,
-                        BackgroundImage= "time_adan_off.png"
+                        BackgroundImage = "time_adan_off.png"
                     });
                 }
             }
