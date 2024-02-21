@@ -84,7 +84,8 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
                     <Border Stroke="{TemplateBinding BorderColor}"
@@ -102,6 +103,13 @@
                     <Label Grid.Column="1" Text="{TemplateBinding CardTitle}"
                     FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
                     HorizontalTextAlignment="Start" />
+
+                    <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="True" Background="Transparent" Margin="2"
+                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="Button_Clicked">
+                        <Button.ImageSource>
+                            <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
+                        </Button.ImageSource>
+                    </Button>
     
                     </Grid>
             </Border>
@@ -115,9 +123,58 @@
 
     <ScrollView>
         <StackLayout>
-            <controls:CardView BorderColor="DarkGray" IconBackgroundColor="Transparent"
-                CardTitle="Undefined"/>
-            
+            <!--<controls:CardView BorderColor="DarkGray" IconBackgroundColor="Transparent"
+                CardTitle="Undefined"/>-->
+
+                <Border Background="White"
+                    Stroke="DarkGray"
+                     StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
+                    Padding="1" Margin="1, 1 ,1,1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="Black"
+                  Offset="10,10"
+                  Radius="14"
+                  Opacity="0.8" />
+                    </Border.Shadow>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+
+                    <Border Stroke="DarkGray"
+                    Background="Transparent"
+                    HorizontalOptions="Center"  VerticalOptions="Center">
+                            <Image Margin="-20" WidthRequest="25" HeightRequest="25" Aspect="AspectFill">
+                                <Image.Source>
+                                    <FontImageSource  FontFamily="FluentFontIcons" Color="Black"
+                                      Glyph="&#xE707;"
+                                      Size="25" />
+                                </Image.Source>
+                            </Image>
+                        </Border>
+
+                    <Label x:Name="locationText" Grid.Column="1" Text="{Binding AppLocation}"
+                    FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Start" />
+
+                        <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="True" Background="Transparent" Margin="2"
+                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="Button_Clicked">
+                            <Button.ImageSource>
+                                <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
+                            </Button.ImageSource>
+                        </Button>
+
+                    </Grid>
+                </Border>
+
+                
             <FlexLayout
                  AlignItems="Center" Wrap="Wrap" JustifyContent="Center"
                  BindableLayout.ItemsSource="{Binding AdanCollection}"

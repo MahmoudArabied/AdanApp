@@ -1,4 +1,7 @@
-﻿namespace AdanUI.Pages
+﻿using AdanUI.Domain;
+using System.Diagnostics;
+
+namespace AdanUI.Pages
 {
     public partial class MainPage : ContentPage
     {
@@ -19,6 +22,25 @@
             //    CounterBtn.Text = $"Clicked {count} times";
 
             //SemanticScreenReader.Announce(CounterBtn.Text);
+        }
+
+        private async void Button_Clicked(object sender, EventArgs e)
+        {
+            UpdateLocationBut.IsEnabled = false;
+
+            LocationUtil oLocation = new LocationUtil();
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                string strText = await oLocation.GetCurrentLocation();
+                Debug.WriteLine(strText);
+                locationText.Text = strText;
+            });
+
+            Debug.WriteLine("Button Clicked");
+
+            UpdateLocationBut.IsEnabled = true;
+
+
         }
     }
 
