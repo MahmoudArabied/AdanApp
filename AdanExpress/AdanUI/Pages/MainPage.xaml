@@ -115,40 +115,6 @@
 
     <ScrollView>
         <StackLayout>
-            <!--<controls:CardView>
-                <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
-                            Background="{Binding CardColor}"
-                            Stroke="{Binding BorderColor}"
-                            StrokeThickness="1"
-                            StrokeShape="RoundRectangle 50,50,50,50"                    
-                            Padding="8" Margin="10"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center">
-                    <Border.Shadow>
-                        <Shadow Brush="Black" Offset="10,10"  Radius="14"  Opacity="0.8" />
-                    </Border.Shadow>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="300"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Label Text="Undefined" Grid.Row="1"
-                         FontAttributes="Bold" Margin="5,5,5,5"
-                         FontSize="20"
-                         VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                         VerticalOptions="Fill" HorizontalOptions="Fill"/>
-                    </Grid>
-                </Border>
-            </controls:CardView>-->
-
-            <!--<controls:CardView BorderColor="DarkGray"
-                           CardTitle="Undefined"
-                           IconImageSource="{StaticResource Home}"
-                           IconBackgroundColor="Transparent"/>-->
-
             <controls:CardView BorderColor="DarkGray" IconBackgroundColor="Transparent"
                 CardTitle="Undefined"/>
             
