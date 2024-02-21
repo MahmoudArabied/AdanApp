@@ -6,9 +6,9 @@
             android:TabbedPage.ToolbarPlacement="Bottom"
             x:Class="AdanUI.Pages.AppTabbedPage">
 
-    <NavigationPage Title="Home" IconImageSource="{StaticResource Home}">
+    <NavigationPage Title="Home" IconImageSource="{StaticResource Home}" Shell.NavBarIsVisible="False">
         <x:Arguments>
-            <pages:MainPage Title="Home" />
+            <pages:MainPage />
         </x:Arguments>
     </NavigationPage>
     <NavigationPage Title="Qibla" IconImageSource="{StaticResource Compass}">

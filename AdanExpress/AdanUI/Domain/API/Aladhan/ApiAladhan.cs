@@ -1,7 +1,4 @@
-﻿using Kotlin.System;
-using static AdanUI.Domain.API.PrayerTimes.ApiPrayer;
-
-namespace AdanUI.Domain.API.Aladhan
+﻿namespace AdanUI.Domain.API.Aladhan
 {
     /// <summary>
     /// Based on documentation from https://aladhan.com/prayer-times-api

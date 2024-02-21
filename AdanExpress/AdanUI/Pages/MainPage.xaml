@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:AdanUI.Controls"
              xmlns:localViewModels="clr-namespace:AdanUI.ViewModels"
+             xmlns:domain="clr-namespace:AdanUI.Domain"
              x:Class="AdanUI.Pages.MainPage">
 
     <ContentPage.BindingContext>
@@ -13,10 +14,10 @@
         <ControlTemplate x:Key="AdanCardControlTemplate">
             <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
                Background="{Binding CardColor}"
-              Stroke="{Binding BorderColor}"
+               Stroke="{Binding BorderColor}"
                StrokeThickness="1"
                StrokeShape="RoundRectangle 50,50,50,50"                    
-              Padding="8" Margin="10"
+              Padding="3" Margin="5"
               HorizontalOptions="Center"
               VerticalOptions="Center">
                 <Border.Shadow>
@@ -28,10 +29,10 @@
 
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="90"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="35"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"/>
@@ -39,16 +40,16 @@
                     <Image Source="{Binding IconImageSource}" />
 
                     <Label Text="{Binding CardTitle}" Grid.Row="1"
-                      FontAttributes="Bold" Margin="5,5,5,5"
-                      FontSize="20"
+                      FontAttributes="Bold" Margin="5,2,5,2"
+                      FontSize="18"
                       VerticalTextAlignment="Center"
                       HorizontalTextAlignment="Center" />
 
                     <ProgressBar Grid.Row="2"
                         Progress="0.5" ProgressColor="{Binding ProgressColor}" />
-                    
+
                     <Label Grid.Row="3" Margin="5,5,5,5"
-                      Text="{Binding CardDescription}" FontSize="18"
+                      Text="{Binding CardDescription}" FontSize="16"
                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
                       VerticalOptions="Fill"
                       HorizontalOptions="Fill" />
@@ -62,18 +63,97 @@
                                CardTitle="{Binding AdanName}"
                                CardDescription="{Binding AdanTime}"
                                ControlTemplate="{StaticResource AdanCardControlTemplate}" />
-       </DataTemplate>
+        </DataTemplate>
+
+        <ControlTemplate x:Key="LocationCardViewControlTemplate">
+            <Border Background="{TemplateBinding CardColor}"
+            Stroke="{TemplateBinding BorderColor}"
+             StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
+            Padding="1" Margin="1, 1 ,1,1"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="Black"
+                  Offset="10,10"
+                  Radius="14"
+                  Opacity="0.8" />
+                </Border.Shadow>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Stroke="{TemplateBinding BorderColor}"
+                    Background="{TemplateBinding IconBackgroundColor}"
+                    HorizontalOptions="Center"  VerticalOptions="Center">
+                        <Image Margin="-20" WidthRequest="25" HeightRequest="25" Aspect="AspectFill">
+                            <Image.Source>
+                                <FontImageSource  FontFamily="FluentFontIcons" Color="Black"
+                                      Glyph="&#xE707;"
+                                      Size="25" />
+                            </Image.Source>
+                        </Image>
+                    </Border>
+
+                    <Label Grid.Column="1" Text="{TemplateBinding CardTitle}"
+                    FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Start" />
+    
+                    </Grid>
+            </Border>
+        </ControlTemplate>
+
+        <Style TargetType="controls:CardView">
+            <Setter Property="ControlTemplate"
+             Value="{StaticResource LocationCardViewControlTemplate}" />
+        </Style>
     </ContentPage.Resources>
 
     <ScrollView>
         <StackLayout>
-            <SearchBar x:Name="searchBar"
-                   SearchCommand="{Binding PerformSearch}"
-                   SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
-            <ListView x:Name="searchResults" ItemsSource="{Binding SearchResults}" />
-        
-        <FlexLayout
-                AlignItems="Center" Wrap="Wrap" JustifyContent="Center"
+            <!--<controls:CardView>
+                <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
+                            Background="{Binding CardColor}"
+                            Stroke="{Binding BorderColor}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 50,50,50,50"                    
+                            Padding="8" Margin="10"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="10,10"  Radius="14"  Opacity="0.8" />
+                    </Border.Shadow>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Undefined" Grid.Row="1"
+                         FontAttributes="Bold" Margin="5,5,5,5"
+                         FontSize="20"
+                         VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                         VerticalOptions="Fill" HorizontalOptions="Fill"/>
+                    </Grid>
+                </Border>
+            </controls:CardView>-->
+
+            <!--<controls:CardView BorderColor="DarkGray"
+                           CardTitle="Undefined"
+                           IconImageSource="{StaticResource Home}"
+                           IconBackgroundColor="Transparent"/>-->
+
+            <controls:CardView BorderColor="DarkGray" IconBackgroundColor="Transparent"
+                CardTitle="Undefined"/>
+            
+            <FlexLayout
+                 AlignItems="Center" Wrap="Wrap" JustifyContent="Center"
                  BindableLayout.ItemsSource="{Binding AdanCollection}"
                  BindableLayout.ItemTemplate="{StaticResource AdanWidgetTemplate}" 
                     />

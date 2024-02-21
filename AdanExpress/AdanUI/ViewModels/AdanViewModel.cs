@@ -1,4 +1,5 @@
-﻿using AdanUI.Models;
+﻿using AdanUI.Domain;
+using AdanUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,21 +18,14 @@ namespace AdanUI.ViewModels
     {
         public ObservableCollection<AdanModel> AdanCollection { get; set; }
 
-        //public ICommand PerformSearch => new Command<string>((string query) =>
-        //{
-        //    SearchResults = DataService.GetSearchResults(query);
-        //});
+        public string AppLocation { get; set; }
 
-        //private List<string> searchResults = DataService.Fruits;
-        //public List<string> SearchResults
-        //{
-        //    get => searchResults;
-        //    set => SetProperty(ref searchResults, value);
-        //}
-   
         public AdanViewModel()
         {
             initiateAdanCollection();
+            AppLocation = "Undefined";
+
+            _ = Task.Run(GetCurrentLocation);
         }
 
         private void initiateAdanCollection()
@@ -63,6 +57,15 @@ namespace AdanUI.ViewModels
             AdanCollection.First(x => x.AdanTag == eTimes.Asr).BackgroundImage = "asr_off.png";
             AdanCollection.First(x => x.AdanTag == eTimes.Maghrib).BackgroundImage = "maghrib_off.png";
             AdanCollection.First(x => x.AdanTag == eTimes.Isha).BackgroundImage = "isha_off.png";
+        }
+
+        public async void GetCurrentLocation()
+        {
+            LocationUtil oLocation = new LocationUtil();
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                AppLocation = await oLocation.GetCurrentLocation();
+            });
         }
     }
 }
