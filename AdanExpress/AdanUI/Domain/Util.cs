@@ -15,6 +15,8 @@ namespace AdanUI.Domain
         /// </summary>
         public static string DateTimeAPIFormat = "yyyy-MM-dd";
 
+        public static string DateTimeAPIFormat2 = "dd-MM-yyyy";
+
         /// <summary>
         /// Format dateTime as time only 24H format
         /// </summary>

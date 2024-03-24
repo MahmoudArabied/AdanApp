@@ -5,42 +5,33 @@ namespace AdanUI.Pages
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private LocationUtil m_oLocation;
 
         public MainPage()
         {
             InitializeComponent();
+           m_oLocation = new LocationUtil();
+            _ = Task.Run(GetCurrentLocation);
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void GetCurrentLocation()
         {
-            count++;
-
-            //if (count == 1)
-            //    CounterBtn.Text = $"Clicked {count} time";
-            //else
-            //    CounterBtn.Text = $"Clicked {count} times";
-
-            //SemanticScreenReader.Announce(CounterBtn.Text);
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                string strText = await m_oLocation.GetCurrentLocation();
+                Debug.WriteLine(strText);
+                locationText.Text = strText;
+            });
         }
 
         private async void Button_Clicked(object sender, EventArgs e)
         {
             UpdateLocationBut.IsEnabled = false;
-
-            LocationUtil oLocation = new LocationUtil();
-            await MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                string strText = await oLocation.GetCurrentLocation();
-                Debug.WriteLine(strText);
-                locationText.Text = strText;
-            });
+            _ = Task.Run(GetCurrentLocation);
 
             Debug.WriteLine("Button Clicked");
 
             UpdateLocationBut.IsEnabled = true;
-
-
         }
     }
 

@@ -211,7 +211,7 @@
         /// Get the main request URL 
         /// </summary>
         /// <param name="eRequestOption">The time definition <see cref="enumApiAladhanRequestOption"/></param>
-        /// <param name="arrLocationInput">Parameters of Location</param>
+        /// <param name="argLocationInput">Parameters of Location</param>
         /// <param name="iMethod">The prayer times calculation method 1 - 15 </param>
         /// index_0: city, 
         /// Or: index_0: longitude, index_1:latitude, index_2: elevation
@@ -228,11 +228,11 @@
         /// Timings By Address - https://api.aladhan.com/v1/timingsByAddress/:date
         /// Timings By City - https://api.aladhan.com/v1/timingsByCity/:date
         /// <returns>The API request URL, it can be null</returns>
-        public static string? getUrlRequest(enumApiAladhanRequestOption eRequestOption, string argsDateOptions, string arrLocationInput, int iMethod = 3)
+        public static string? getUrlRequest(enumApiAladhanRequestOption eRequestOption, string argsDateOptions, string argLocationInput, int iMethod = 3)
         {
-            if (!string.IsNullOrEmpty(arrLocationInput) && !string.IsNullOrEmpty(arrLocationInput))
+            if (!string.IsNullOrEmpty(argLocationInput) && !string.IsNullOrEmpty(argLocationInput))
             {
-                return MAIN_API_URL + eRequestOption + "/" + argsDateOptions + "?" + arrLocationInput + "&method=" + iMethod;
+                return MAIN_API_URL + eRequestOption + "/" + argsDateOptions + "?" + argLocationInput + "&method=" + iMethod;
             }
             else
             {

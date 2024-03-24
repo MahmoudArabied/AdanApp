@@ -23,6 +23,11 @@ namespace AdanUI.Domain
         private const string OPENSTREET_API_URL = "https://nominatim.openstreetmap.org/reverse?format=json&";
 
         /// <summary>
+        /// The current location of device 
+        /// </summary>
+        public Location? m_oLocation { get; private set; }
+
+        /// <summary>
         /// Check if a device has a cached locaction value
         /// Depending on the device, not all location values may be available. 
         /// For example, the Altitude property might be null, have a value of 0, 
@@ -39,6 +44,7 @@ namespace AdanUI.Domain
                 if (location != null)
                 {
                     Debug.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                    m_oLocation = location;
                     return $"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}";
                 }
 
@@ -91,6 +97,7 @@ namespace AdanUI.Domain
                 if (location != null)
                 {
                     Debug.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                    m_oLocation= location;
                     return await GetGeocodeReverseDataOpenStreetAPI(location.Latitude, location.Longitude);
                 }
             }
