@@ -1,14 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace AdanUI.Domain
 {
     public class LocationUtil
     {
+        /// <summary>
+        /// An http client to get API update
+        /// </summary>
+        private static readonly HttpClient s_httpClient = new HttpClient();
+
+        /// <summary>
+        /// The main API's URL of the open street maps 
+        /// </summary>
+        private const string OPENSTREET_API_URL = "https://nominatim.openstreetmap.org/reverse?format=json&";
+
         /// <summary>
         /// Check if a device has a cached locaction value
         /// Depending on the device, not all location values may be available. 
@@ -21,7 +34,7 @@ namespace AdanUI.Domain
         {
             try
             {
-                Location location = await Geolocation.Default.GetLastKnownLocationAsync();
+                Location? location = await Geolocation.Default.GetLastKnownLocationAsync();
 
                 if (location != null)
                 {
@@ -67,7 +80,7 @@ namespace AdanUI.Domain
 
                 _cancelTokenSource = new CancellationTokenSource();
 
-                Location location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+                Location? location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
 
                 if (location != null && location.IsFromMockProvider)
                 {
@@ -78,7 +91,7 @@ namespace AdanUI.Domain
                 if (location != null)
                 {
                     Debug.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    return await GetGeocodeReverseData(location.Latitude, location.Longitude);
+                    return await GetGeocodeReverseDataOpenStreetAPI(location.Latitude, location.Longitude);
                 }
             }
             // Catch one of the following exceptions:
@@ -106,7 +119,7 @@ namespace AdanUI.Domain
             }
         }
 
-        private async Task<string> GetGeocodeReverseData(double latitude = 47.673988, double longitude = -122.121513)
+        private async Task<string> GetGeocodeReverseDataGoogleAPI(double latitude = 47.673988, double longitude = -122.121513)
         {
             IEnumerable<Placemark> placemarks = await Geocoding.Default.GetPlacemarksAsync(latitude, longitude);
 
@@ -129,6 +142,30 @@ namespace AdanUI.Domain
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// Reverse geocoding generates an address from a coordinate given as latitude and longitude
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
+        private async Task<string> GetGeocodeReverseDataOpenStreetAPI(double latitude = 53.264072, double longitude = 10.460492)
+        {
+            string strUrl = OPENSTREET_API_URL + "lat=" + latitude.ToString(CultureInfo.InvariantCulture) + "&lon=" + longitude.ToString(CultureInfo.InvariantCulture);
+
+            Debug.WriteLine($"GetGeocodeReverseDataOpenStreetAPI: URL: {strUrl}");
+            s_httpClient.DefaultRequestHeaders.Accept.Clear();
+            string streamString = await s_httpClient.GetStringAsync(strUrl);
+            GeoLocationOpenStreetResponse? response = JsonSerializer.Deserialize<GeoLocationOpenStreetResponse>(streamString);
+            if (response != null)
+            {
+                return response.address.town;
+            }
+            else
+            {
+                return "Undefined";
+            }
         }
     }
 }
