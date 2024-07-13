@@ -11,7 +11,7 @@
             <pages:MainPage />
         </x:Arguments>
     </NavigationPage>
-    <NavigationPage Title="Qibla" IconImageSource="{StaticResource Compass}">
+    <!--<NavigationPage Title="Qibla" IconImageSource="{StaticResource Compass}">
         <x:Arguments>
             <pages:MainPage Title="Qibla" />
         </x:Arguments>
@@ -25,6 +25,6 @@
         <x:Arguments>
             <pages:MainPage Title="About" />
         </x:Arguments>
-    </NavigationPage>
+    </NavigationPage>-->
 
 </TabbedPage>

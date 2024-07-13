@@ -40,6 +40,8 @@ namespace AdanUI.ViewModels
         /// </summary>
         private ApiAladhanResponse? m_ApiAladhanResponse;
 
+        private IDispatcherTimer m_dtUpdatePrayTime;
+
         public string AppLocation { get; set; }
 
         public AdanViewModel()
@@ -48,11 +50,17 @@ namespace AdanUI.ViewModels
             AppLocation = "Undefined";
             m_oLocationUtil = new LocationUtil();
 
+            m_dtUpdatePrayTime = Application.Current.Dispatcher.CreateTimer();
+            m_dtUpdatePrayTime.Interval = new TimeSpan(0, 0, 0, 10);
+            m_dtUpdatePrayTime.Tick += OnUpdatePrayTime_Tick;
+            m_dtUpdatePrayTime.Start();
+        }
+
+        private void OnUpdatePrayTime_Tick(object? sender, EventArgs e)
+        {
+            Debug.WriteLine("AdanViewMode: OnUpdatePrayTime_Tick ");
             // Updated location
             _ = Task.Run(GetCurrentLocation);
-
-            // Update Pray Time
-            _ = Task.Run(GetPrayUpdatesFromAPI);
         }
 
         private void initiateAdanCollection()
@@ -71,10 +79,11 @@ namespace AdanUI.ViewModels
                     {
                         AdanTag = timeType,
                         AdanName = timeType.ToString(),
-                        AdanTime = DateTime.Now.ToString(TimeOnlyFormat),
+                        AdanTime = "", //DateTime.Now.ToString(TimeOnlyFormat),
                         ProgressColor = Colors.Azure,
                         BackgroundImage = "time_adan_off.png"
-                    });
+
+                    }); 
                 }
             }
 
@@ -88,10 +97,22 @@ namespace AdanUI.ViewModels
 
         public async void GetCurrentLocation()
         {
+            m_dtUpdatePrayTime.Stop();
+
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
                 AppLocation = await m_oLocationUtil.GetCurrentLocation();
-                Debug.WriteLine($"AdanViewModel: {AppLocation}");
+                Debug.WriteLine($"AdanViewModel: GetCurrentLocation {AppLocation}");
+
+                if (m_oLocationUtil.m_oLocation != null)
+                {
+                    // Update Pray Time
+                    _ = Task.Run(GetPrayUpdatesFromAPI);
+                }
+                else
+                {
+                    m_dtUpdatePrayTime.Start();
+                }
             });
         }
 
@@ -99,10 +120,12 @@ namespace AdanUI.ViewModels
         {
             if (m_oLocationUtil.m_oLocation == null)
             {
-                Debug.WriteLine($"AdanViewModel: location is null ");
-                _ = Task.Run(GetCurrentLocation);
+                Debug.WriteLine($"AdanViewModel: GetPrayUpdatesFromAPI location is null ");
+                //_ = Task.Run(GetCurrentLocation);
                 return;
             }
+
+            Debug.WriteLine($"AdanViewModel: GetPrayUpdatesFromAPI location is not null ");
 
             string strLocationInput = "latitude=" + m_oLocationUtil.m_oLocation.Latitude.ToString(CultureInfo.InvariantCulture) +
                 "&longitude=" + m_oLocationUtil.m_oLocation.Longitude.ToString(CultureInfo.InvariantCulture);
@@ -111,17 +134,57 @@ namespace AdanUI.ViewModels
             string streamString = await s_httpClient.GetStringAsync(strUrl);
             m_ApiAladhanResponse = JsonSerializer.Deserialize<ApiAladhanResponse>(streamString);
 
+            Debug.WriteLine($"AdanViewModel: GetPrayUpdatesFromAPI location is not null {strLocationInput}");
+            Debug.WriteLine($"AdanViewModel: GetPrayUpdatesFromAPI location is not null {strUrl}");
 
             if (m_ApiAladhanResponse != null)
             {
-                Debug.WriteLine($" Dhurhr Time: {m_ApiAladhanResponse.data.timings.Dhuhr}");
-                Debug.WriteLine($" Asr Time: {m_ApiAladhanResponse.data.timings.Asr}");
+                Debug.WriteLine($"GetPrayUpdatesFromAPI Fajr Time: {m_ApiAladhanResponse.data.timings.Fajr}");
+                Debug.WriteLine($"GetPrayUpdatesFromAPI Dhurhr Time: {m_ApiAladhanResponse.data.timings.Dhuhr}");
+                Debug.WriteLine($"GetPrayUpdatesFromAPI Asr Time: {m_ApiAladhanResponse.data.timings.Asr}");
+                Debug.WriteLine($"GetPrayUpdatesFromAPI Maghrib Time: {m_ApiAladhanResponse.data.timings.Maghrib}");
+                Debug.WriteLine($"GetPrayUpdatesFromAPI Isha Time: {m_ApiAladhanResponse.data.timings.Isha}");
+                Debug.WriteLine($"GetPrayUpdatesFromAPI Mid Night Time: {m_ApiAladhanResponse.data.timings.Midnight}");
+                _ = Task.Run(UpdatePrayView);
             }
+        }
+
+        /// <summary>
+        /// Get the assinged time for a give time pray
+        /// </summary>
+        /// <param name="eTime">The time type <see cref="AppConstants.eTimes"/></param>
+        /// <param name="times">The retrieved times from API <see cref="Times"/></param>
+        /// <returns></returns>
+        private string GetDefinedTime(eTimes eTime, Timings times)
+        {
+            return eTime switch
+            {
+                eTimes.Imsak => times.Imsak,
+                eTimes.Sunrise => times.Sunrise,
+                eTimes.Fajr => times.Fajr,
+                eTimes.Dhuhr => times.Dhuhr,
+                eTimes.Asr => times.Asr,
+                eTimes.Sunset => times.Sunset,
+                eTimes.Maghrib => times.Maghrib,
+                eTimes.Isha => times.Isha,
+                eTimes.Midnight => times.Midnight,
+                _ => "",
+            };
         }
 
         private async Task UpdatePrayView()
         {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                if (m_ApiAladhanResponse == null) { return; }
 
+                foreach (var item in AdanCollection)
+                {
+                    string strTime = GetDefinedTime(item.AdanTag, m_ApiAladhanResponse.data.timings);
+                    Debug.WriteLine($"Tage: {item.AdanTag} Time: {strTime}");
+                    item.AdanTime = GetDefinedTime(item.AdanTag, m_ApiAladhanResponse.data.timings);
+                }
+            });
         }
     }
 }

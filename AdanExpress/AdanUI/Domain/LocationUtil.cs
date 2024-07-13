@@ -97,7 +97,7 @@ namespace AdanUI.Domain
                 if (location != null)
                 {
                     Debug.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    m_oLocation= location;
+                    m_oLocation = location;
                     return await GetGeocodeReverseDataOpenStreetAPI(location.Latitude, location.Longitude);
                 }
             }
@@ -167,10 +167,25 @@ namespace AdanUI.Domain
             GeoLocationOpenStreetResponse? response = JsonSerializer.Deserialize<GeoLocationOpenStreetResponse>(streamString);
             if (response != null)
             {
-                return response.address.town;
+                Debug.WriteLine($"GetGeocodeReverseDataOpenStreetAPI: Reponse is not null : {response.address.town} ");
+
+                if (response.address.town != null)
+                {
+                    return response.address.town;
+                }
+                else if (response.address.state != null)
+                {
+                    return response.address.state;
+                }
+                else
+                {
+                    return response.address.county;
+                }
             }
             else
             {
+                Debug.WriteLine($"GetGeocodeReverseDataOpenStreetAPI: Reponse is null ");
+
                 return "Undefined";
             }
         }

@@ -65,7 +65,7 @@
                                ControlTemplate="{StaticResource AdanCardControlTemplate}" />
         </DataTemplate>
 
-        <ControlTemplate x:Key="LocationCardViewControlTemplate">
+        <!--<ControlTemplate x:Key="LocationCardViewControlTemplate">
             <Border Background="{TemplateBinding CardColor}"
             Stroke="{TemplateBinding BorderColor}"
              StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
@@ -105,7 +105,7 @@
                     HorizontalTextAlignment="Start" />
 
                     <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="True" Background="Transparent" Margin="2"
-                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="Button_Clicked">
+                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="LocationBut_Clicked">
                         <Button.ImageSource>
                             <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
                         </Button.ImageSource>
@@ -113,7 +113,7 @@
     
                     </Grid>
             </Border>
-        </ControlTemplate>
+        </ControlTemplate>-->
 
         <Style TargetType="controls:CardView">
             <Setter Property="ControlTemplate"
@@ -125,7 +125,6 @@
         <StackLayout>
             <!--<controls:CardView BorderColor="DarkGray" IconBackgroundColor="Transparent"
                 CardTitle="Undefined"/>-->
-
                 <Border Background="White"
                     Stroke="DarkGray"
                      StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
@@ -165,7 +164,7 @@
                     HorizontalTextAlignment="Start" />
 
                         <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="True" Background="Transparent" Margin="2"
-                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="Button_Clicked">
+                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="LocationBut_Clicked">
                             <Button.ImageSource>
                                 <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
                             </Button.ImageSource>
@@ -173,8 +172,7 @@
 
                     </Grid>
                 </Border>
-
-                
+              
             <FlexLayout
                  AlignItems="Center" Wrap="Wrap" JustifyContent="Center"
                  BindableLayout.ItemsSource="{Binding AdanCollection}"
