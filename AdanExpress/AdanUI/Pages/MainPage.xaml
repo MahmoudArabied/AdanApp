@@ -12,10 +12,10 @@
 
     <ContentPage.Resources>
         <ControlTemplate x:Key="AdanCardControlTemplate">
-            <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}}"
+            <Border BindingContext="{Binding Source={RelativeSource TemplatedParent}, Mode=TwoWay}"
                Background="{Binding CardColor}"
                Stroke="{Binding BorderColor}"
-               StrokeThickness="1"
+               StrokeThickness="3"
                StrokeShape="RoundRectangle 50,50,50,50"                    
               Padding="3" Margin="5"
               HorizontalOptions="Center"
@@ -46,7 +46,9 @@
                       HorizontalTextAlignment="Center" />
 
                     <ProgressBar Grid.Row="2"
-                        Progress="0.5" ProgressColor="{Binding ProgressColor}" />
+                                 IsVisible="{Binding ProgressBarIsVisible}"
+                                 Progress="{Binding ProgressBarValue}"  
+                                 ProgressColor="{Binding ProgressBarColor}" />
 
                     <Label Grid.Row="3" Margin="5,5,5,5"
                       Text="{Binding CardDescription}" FontSize="16"
@@ -58,20 +60,31 @@
         </ControlTemplate>
 
         <DataTemplate x:Key="AdanWidgetTemplate">
-            <controls:CardView BorderColor="{Binding ProgressColor}"
+            <controls:CardView BorderColor="{Binding BorderColor}"
                                IconImageSource="{Binding BackgroundImage}"
+                               CardColor="{Binding CardBackgroundColor}"
                                CardTitle="{Binding AdanName}"
                                CardDescription="{Binding AdanTime}"
-                               ControlTemplate="{StaticResource AdanCardControlTemplate}" />
+                               ProgressBarValue="{Binding ProgressValue}"
+                               ProgressBarIsVisible="{Binding ProgressIsVisible}"
+                               ProgressBarColor="{Binding ProgressColor}"
+                               ControlTemplate="{StaticResource AdanCardControlTemplate}"
+                              />
         </DataTemplate>
+        <Style TargetType="controls:CardView">
+            <Setter Property="ControlTemplate"
+             Value="{StaticResource LocationCardViewControlTemplate}" />
+        </Style>
+    </ContentPage.Resources>
 
-        <!--<ControlTemplate x:Key="LocationCardViewControlTemplate">
-            <Border Background="{TemplateBinding CardColor}"
-            Stroke="{TemplateBinding BorderColor}"
-             StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
-            Padding="1" Margin="1, 1 ,1,1"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
+    <ScrollView>
+        <StackLayout>
+            <Border Background="White"
+                    Stroke="DarkGray"
+                     StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
+                    Padding="1" Margin="1, 1 ,1,1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
                 <Border.Shadow>
                     <Shadow Brush="Black"
                   Offset="10,10"
@@ -88,8 +101,8 @@
                         <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Stroke="{TemplateBinding BorderColor}"
-                    Background="{TemplateBinding IconBackgroundColor}"
+                    <Border Stroke="DarkGray"
+                    Background="Transparent"
                     HorizontalOptions="Center"  VerticalOptions="Center">
                         <Image Margin="-20" WidthRequest="25" HeightRequest="25" Aspect="AspectFill">
                             <Image.Source>
@@ -100,82 +113,22 @@
                         </Image>
                     </Border>
 
-                    <Label Grid.Column="1" Text="{TemplateBinding CardTitle}"
-                    FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
-                    HorizontalTextAlignment="Start" />
-
-                    <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="True" Background="Transparent" Margin="2"
-                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="LocationBut_Clicked">
-                        <Button.ImageSource>
-                            <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
-                        </Button.ImageSource>
-                    </Button>
-    
-                    </Grid>
-            </Border>
-        </ControlTemplate>-->
-
-        <Style TargetType="controls:CardView">
-            <Setter Property="ControlTemplate"
-             Value="{StaticResource LocationCardViewControlTemplate}" />
-        </Style>
-    </ContentPage.Resources>
-
-    <ScrollView>
-        <StackLayout>
-            <!--<controls:CardView BorderColor="DarkGray" IconBackgroundColor="Transparent"
-                CardTitle="Undefined"/>-->
-                <Border Background="White"
-                    Stroke="DarkGray"
-                     StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
-                    Padding="1" Margin="1, 1 ,1,1"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center">
-                    <Border.Shadow>
-                        <Shadow Brush="Black"
-                  Offset="10,10"
-                  Radius="14"
-                  Opacity="0.8" />
-                    </Border.Shadow>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="160" />
-                            <ColumnDefinition Width="50" />
-                        </Grid.ColumnDefinitions>
-
-                    <Border Stroke="DarkGray"
-                    Background="Transparent"
-                    HorizontalOptions="Center"  VerticalOptions="Center">
-                            <Image Margin="-20" WidthRequest="25" HeightRequest="25" Aspect="AspectFill">
-                                <Image.Source>
-                                    <FontImageSource  FontFamily="FluentFontIcons" Color="Black"
-                                      Glyph="&#xE707;"
-                                      Size="25" />
-                                </Image.Source>
-                            </Image>
-                        </Border>
-
                     <Label x:Name="locationText" Grid.Column="1" Text="{Binding AppLocation}"
                     FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
                     HorizontalTextAlignment="Start" />
 
-                        <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="True" Background="Transparent" Margin="2"
-                            VerticalOptions="Center" HorizontalOptions="Center" Clicked="LocationBut_Clicked">
-                            <Button.ImageSource>
-                                <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
-                            </Button.ImageSource>
-                        </Button>
+                    <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="{Binding UpdateLocationButEnabled}" Background="Transparent" Margin="2"
+                            VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding UpdateLocationButCommand}">
+                        <Button.ImageSource>
+                            <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
+            </Border>
 
-                    </Grid>
-                </Border>
-              
             <FlexLayout
                  AlignItems="Center" Wrap="Wrap" JustifyContent="Center"
-                 BindableLayout.ItemsSource="{Binding AdanCollection}"
+                 BindableLayout.ItemsSource="{Binding AdanCollection, Mode=TwoWay}"
                  BindableLayout.ItemTemplate="{StaticResource AdanWidgetTemplate}" 
                     />
         </StackLayout>

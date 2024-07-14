@@ -11,7 +11,7 @@ namespace AdanUI.Pages
         {
             InitializeComponent();
             m_oLocation = new LocationUtil();
-            _ = Task.Run(GetCurrentLocation);
+           // _ = Task.Run(GetCurrentLocation);
         }
 
         private async void GetCurrentLocation()

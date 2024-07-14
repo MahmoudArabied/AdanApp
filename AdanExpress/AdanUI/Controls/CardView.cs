@@ -8,6 +8,10 @@
         public static readonly BindableProperty CardColorProperty = BindableProperty.Create(nameof(CardColor), typeof(Color), typeof(CardView), Colors.White);
         public static readonly BindableProperty IconImageSourceProperty = BindableProperty.Create(nameof(IconImageSource), typeof(ImageSource), typeof(CardView), default(ImageSource));
         public static readonly BindableProperty IconBackgroundColorProperty = BindableProperty.Create(nameof(IconBackgroundColor), typeof(Color), typeof(CardView), Colors.LightGray);
+        public static readonly BindableProperty ProgressBarValueProperty = BindableProperty.Create(nameof(ProgressBarValue), typeof(double), typeof(CardView), 0.0);
+        public static readonly BindableProperty ProgressBarIsVisibleProperty = BindableProperty.Create(nameof(ProgressBarIsVisible), typeof(bool), typeof(CardView), false);
+        public static readonly BindableProperty ProgressBarColorProperty = BindableProperty.Create(nameof(ProgressBarColor), typeof(Color), typeof(CardView), Colors.White);
+
 
         public string CardTitle
         {
@@ -43,6 +47,30 @@
         {
             get => (Color)GetValue(IconBackgroundColorProperty);
             set => SetValue(IconBackgroundColorProperty, value);
+        }
+
+        /// <summary>
+        /// The progress value of progress bar
+        /// </summary>
+        public double ProgressBarValue
+        {
+            get => (double)GetValue(ProgressBarValueProperty);
+            set => SetValue(ProgressBarValueProperty, value);
+        }
+
+        /// <summary>
+        /// Is the progress bar visible or not
+        /// </summary>
+        public bool ProgressBarIsVisible
+        {
+            get => (bool)GetValue(ProgressBarIsVisibleProperty);
+            set => SetValue(ProgressBarIsVisibleProperty, value);
+        }
+
+        public Color ProgressBarColor
+        {
+            get => (Color)GetValue(ProgressBarColorProperty);
+            set => SetValue(ProgressBarColorProperty, value);
         }
     }
 }
