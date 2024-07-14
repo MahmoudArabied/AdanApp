@@ -4,7 +4,9 @@ using AdanUI.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
+using System.Windows.Input;
 using static AdanUI.Domain.AppConstants;
 
 namespace AdanUI.ViewModels
@@ -31,7 +33,15 @@ namespace AdanUI.ViewModels
         /// </summary>
         private ApiAladhanResponse? m_ApiAladhanResponse;
 
+        /// <summary>
+        /// Dispatcher timer to run GEO updated after initialization
+        /// </summary>
         private IDispatcherTimer m_dtUpdatePrayTime;
+
+        /// <summary>
+        /// A dispatcher timer to update UI with current time settings 
+        /// </summary>
+        private IDispatcherTimer m_dtUpdateUITimer;
 
         /// <summary>
         /// The current pray zone 
@@ -62,17 +72,31 @@ namespace AdanUI.ViewModels
         {
             initiateAdanCollection();
             m_strApplLocation = "Loading";
+            m_strTimeInfo = CreateTimeInfo();
             UpdateLocationButEnabled = false;
             UpdateLocationButCommand = new DelegateCommand(OnUpdateLocationButClicked);
             m_oLocationUtil = new LocationUtil();
 
             m_dtUpdatePrayTime = Application.Current.Dispatcher.CreateTimer();
-            m_dtUpdatePrayTime.Interval = new TimeSpan(0, 0, 0, 5);
+            m_dtUpdatePrayTime.Interval = new TimeSpan(0, 0, 0, 2);
             m_dtUpdatePrayTime.Tick += OnUpdatePrayTime_Tick;
             m_dtUpdatePrayTime.Start();
+
+            m_dtUpdateUITimer = Application.Current.Dispatcher.CreateTimer();
+            m_dtUpdateUITimer.Interval = new TimeSpan(0, 0, 1, 8);
+            m_dtUpdateUITimer.Tick += OnUpdateUITime_Tick;
+            m_dtUpdateUITimer.Stop();
+
         }
 
         #region Bind Variables
+        private string m_strTimeInfo;
+        public string TimeInfo
+        {
+            get => m_strTimeInfo;
+            set => SetProperty(ref m_strTimeInfo, value);
+        }
+
         private string m_strApplLocation;
         public string AppLocation
         {
@@ -80,7 +104,7 @@ namespace AdanUI.ViewModels
             set => SetProperty(ref m_strApplLocation, value);
         }
 
-        public DelegateCommand UpdateLocationButCommand;
+        public ICommand UpdateLocationButCommand;
 
         private bool m_bUpdateLocationButEnabled;
         public bool UpdateLocationButEnabled
@@ -89,6 +113,34 @@ namespace AdanUI.ViewModels
             set => SetProperty(ref m_bUpdateLocationButEnabled, value);
         }
         #endregion Bind Variables
+
+        private bool m_bIsUITimeSynced;
+        private void SynchronizeUITimeWithSystemTime()
+        {
+            while (true)
+            {
+                if (DateTime.Now.Second <= 5)
+                {
+                    m_dtUpdateUITimer.Start();
+                    Debug.WriteLine($"SynchronizeTimeWithSystemTime Done  {DateTime.Now.ToString("H:mm:ss") }");
+                    TimeInfo = CreateTimeInfo();
+                    m_bIsUITimeSynced = true;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create the Time and Date info
+        /// </summary>
+        /// <returns></returns>
+        private string CreateTimeInfo()
+        {
+            StringBuilder oSb = new StringBuilder();
+            oSb.AppendLine($"{DateTime.Now.DayOfWeek} {DateTime.Now.ToString("MM/dd/yy H:mm",
+                              CultureInfo.CurrentCulture)}");
+            return oSb.ToString();
+        }
 
         private void OnUpdateLocationButClicked(object obj)
         {
@@ -105,9 +157,7 @@ namespace AdanUI.ViewModels
 
         private void initiateAdanCollection()
         {
-
             AdanCollection = new ObservableCollection<AdanModel>();
-
             foreach (eTimes timeType in Enum.GetValues(typeof(eTimes)))
             {
                 if (timeType != eTimes.Imsak &&
@@ -153,6 +203,7 @@ namespace AdanUI.ViewModels
                     // Update Pray Time
                     _ = Task.Run(GetPrayUpdatesFromAPI);
                     UpdateLocationButEnabled = true;
+
                 }
                 else
                 {
@@ -258,6 +309,18 @@ namespace AdanUI.ViewModels
             };
         }
 
+        /// <summary>
+        /// Update related UI controls on Timer tick 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUpdateUITime_Tick(object? sender, EventArgs e)
+        {
+            Debug.WriteLine($"AdanViewMode: OnUpdateUITime_Tick {DateTime.Now.ToString("H:mm:ss") }");
+            // Updated location
+            _ = Task.Run(UpdatePrayView);
+        }
+
         private async Task UpdatePrayView()
         {
             await MainThread.InvokeOnMainThreadAsync(async () =>
@@ -273,9 +336,14 @@ namespace AdanUI.ViewModels
 
                 }
 
-
                 UpdateCurrentPrayZone();
+                TimeInfo = CreateTimeInfo();
             });
+
+            if (!m_bIsUITimeSynced)
+            {
+                SynchronizeUITimeWithSystemTime();
+            }
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
              xmlns:controls="clr-namespace:AdanUI.Controls"
              xmlns:localViewModels="clr-namespace:AdanUI.ViewModels"
              xmlns:domain="clr-namespace:AdanUI.Domain"
+             BackgroundColor="{DynamicResource PageBackgroundColor}"
              x:Class="AdanUI.Pages.MainPage">
 
     <ContentPage.BindingContext>
@@ -78,7 +79,7 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <StackLayout>
+        <StackLayout BackgroundColor="{DynamicResource PrimaryColor}">
             <Border Background="White"
                     Stroke="DarkGray"
                      StrokeThickness="1" StrokeShape="RoundRectangle 50,50,50,50"                    
@@ -91,7 +92,7 @@
                   Radius="14"
                   Opacity="0.8" />
                 </Border.Shadow>
-                <Grid>
+                <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
@@ -117,7 +118,7 @@
                     FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
                     HorizontalTextAlignment="Start" />
 
-                    <Button x:Name="UpdateLocationBut" Grid.Column="2" IsEnabled="{Binding UpdateLocationButEnabled}" Background="Transparent" Margin="2"
+                    <Button x:Name="UpdateLocationBut" Grid.Column="2" Background="Transparent" Margin="2"
                             VerticalOptions="Center" HorizontalOptions="Center" Command="{Binding UpdateLocationButCommand}">
                         <Button.ImageSource>
                             <FontImageSource x:Name="UpdateLocationIcon" FontFamily="FluentFontIcons" Color="Black" Glyph="&#xE72C;"  Size="25" />
@@ -126,6 +127,10 @@
                 </Grid>
             </Border>
 
+            <Label x:Name="timeText" Text="{Binding TimeInfo}" Margin="10"
+                FontAttributes="Bold" FontSize="20" VerticalTextAlignment="Center"
+                HorizontalTextAlignment="Start" />
+            
             <FlexLayout
                  AlignItems="Center" Wrap="Wrap" JustifyContent="Center"
                  BindableLayout.ItemsSource="{Binding AdanCollection, Mode=TwoWay}"
