@@ -72,6 +72,7 @@ namespace AdanUI.ViewModels
         {
             initiateAdanCollection();
             m_strApplLocation = "Loading";
+            HomeBackgroundImageSource = "background_home.png";
             m_strTimeInfo = CreateTimeInfo();
             UpdateLocationButEnabled = false;
             UpdateLocationButCommand = new DelegateCommand(OnUpdateLocationButClicked);
@@ -86,7 +87,6 @@ namespace AdanUI.ViewModels
             m_dtUpdateUITimer.Interval = new TimeSpan(0, 0, 1, 8);
             m_dtUpdateUITimer.Tick += OnUpdateUITime_Tick;
             m_dtUpdateUITimer.Stop();
-
         }
 
         #region Bind Variables
@@ -112,6 +112,16 @@ namespace AdanUI.ViewModels
             get => m_bUpdateLocationButEnabled;
             set => SetProperty(ref m_bUpdateLocationButEnabled, value);
         }
+
+        /// <summary>
+        /// The background image of a given widget
+        /// </summary>
+        private string m_strHomeBackgroudImage;
+        public string HomeBackgroundImageSource
+        {
+            get => m_strHomeBackgroudImage;
+            set => SetProperty(ref m_strHomeBackgroudImage, value);
+        }
         #endregion Bind Variables
 
         private bool m_bIsUITimeSynced;
@@ -122,7 +132,7 @@ namespace AdanUI.ViewModels
                 if (DateTime.Now.Second <= 5)
                 {
                     m_dtUpdateUITimer.Start();
-                    Debug.WriteLine($"SynchronizeTimeWithSystemTime Done  {DateTime.Now.ToString("H:mm:ss") }");
+                    Debug.WriteLine($"SynchronizeTimeWithSystemTime Done  {DateTime.Now.ToString("H:mm:ss")}");
                     TimeInfo = CreateTimeInfo();
                     m_bIsUITimeSynced = true;
                     break;
@@ -136,9 +146,16 @@ namespace AdanUI.ViewModels
         /// <returns></returns>
         private string CreateTimeInfo()
         {
+            DateTime dtNow = DateTime.Now;
             StringBuilder oSb = new StringBuilder();
-            oSb.AppendLine($"{DateTime.Now.DayOfWeek} {DateTime.Now.ToString("MM/dd/yy H:mm",
-                              CultureInfo.CurrentCulture)}");
+
+            // Format: "MM/dd/yy H:mm"
+            oSb.AppendLine($"{dtNow.DayOfWeek} {dtNow.ToString("H:mm", CultureInfo.CurrentCulture)}");
+
+            // Creates an instance of the HijriCalendar.
+            HijriCalendar oHijriCal = new HijriCalendar();
+
+            oSb.AppendLine($"{oHijriCal.GetDayOfMonth(dtNow)} {Util.GetHijriMonthName(oHijriCal.GetMonth(dtNow))} {oHijriCal.GetYear(dtNow)}");
             return oSb.ToString();
         }
 
@@ -316,7 +333,7 @@ namespace AdanUI.ViewModels
         /// <param name="e"></param>
         private void OnUpdateUITime_Tick(object? sender, EventArgs e)
         {
-            Debug.WriteLine($"AdanViewMode: OnUpdateUITime_Tick {DateTime.Now.ToString("H:mm:ss") }");
+            Debug.WriteLine($"AdanViewMode: OnUpdateUITime_Tick {DateTime.Now.ToString("H:mm:ss")}");
             // Updated location
             _ = Task.Run(UpdatePrayView);
         }

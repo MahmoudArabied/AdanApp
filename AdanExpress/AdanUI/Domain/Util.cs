@@ -39,5 +39,32 @@ namespace AdanUI.Domain
                 return source.ToString();
             }
         }
+
+        /// <summary>
+        /// Get the related Hijri Month name in English
+        /// </summary>
+        /// <param name="iMonth">The monht index</param>
+        /// <returns></returns>
+        public static string GetHijriMonthName(int iMonth)
+        {
+            return iMonth switch
+            {
+                1 => "Muharram",
+                2 => "Safar",
+                3 => "Rabi al-Awwal",
+                4 => "Rabi al-Thani",
+                5 => "Jumada al-Awwal",
+                6 => "Jumada al-Thani",
+                7 => "Rajab",
+                8 => "Shaban",
+                9 => "Ramadan",
+                10 => "Shawwal",
+                11 => "Dhul Qadah",
+                12 => "Dhul Hijjah",
+                _ => "HijirMonth"
+            };
+
+        }
+
     }
 }
