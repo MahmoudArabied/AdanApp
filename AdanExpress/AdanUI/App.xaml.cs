@@ -10,7 +10,5 @@ namespace AdanUI
 
             MainPage = new AppTabbedPage();
         }
-
-
     }
 }

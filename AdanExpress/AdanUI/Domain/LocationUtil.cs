@@ -28,6 +28,16 @@ namespace AdanUI.Domain
         public Location? m_oLocation { get; private set; }
 
         /// <summary>
+        /// The assigned cancel token for get location
+        /// </summary>
+        private CancellationTokenSource? m_cancelTokenSourceGetLocation;
+
+        /// <summary>
+        /// Is the GEt location in progress
+        /// </summary>
+        private bool m_isCheckingLocation;
+
+        /// <summary>
         /// Check if a device has a cached locaction value
         /// Depending on the device, not all location values may be available. 
         /// For example, the Altitude property might be null, have a value of 0, 
@@ -74,19 +84,19 @@ namespace AdanUI.Domain
             return "None";
         }
 
-        private CancellationTokenSource _cancelTokenSource;
-        private bool _isCheckingLocation;
+        /// <summary>
+        /// Get the current location of device
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> GetCurrentLocation()
         {
             try
             {
-                _isCheckingLocation = true;
-
+                m_isCheckingLocation = true;
                 GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                m_cancelTokenSourceGetLocation = new CancellationTokenSource();
 
-                _cancelTokenSource = new CancellationTokenSource();
-
-                Location? location = await Geolocation.Default.GetLocationAsync(request, _cancelTokenSource.Token);
+                Location? location = await Geolocation.Default.GetLocationAsync(request, m_cancelTokenSourceGetLocation.Token);
 
                 if (location != null && location.IsFromMockProvider)
                 {
@@ -113,24 +123,33 @@ namespace AdanUI.Domain
             }
             finally
             {
-                _isCheckingLocation = false;
+                m_isCheckingLocation = false;
             }
             return "None";
         }
 
+        /// <summary>
+        /// Cancel the get location request
+        /// </summary>
         public void CancelRequest()
         {
-            if (_isCheckingLocation && _cancelTokenSource != null && _cancelTokenSource.IsCancellationRequested == false)
+            if (m_isCheckingLocation && m_cancelTokenSourceGetLocation != null && m_cancelTokenSourceGetLocation.IsCancellationRequested == false)
             {
-                _cancelTokenSource.Cancel();
+                m_cancelTokenSourceGetLocation.Cancel();
             }
         }
 
+        /// <summary>
+        /// Get the location info using Google API: Not used requires access token
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
         private async Task<string> GetGeocodeReverseDataGoogleAPI(double latitude = 47.673988, double longitude = -122.121513)
         {
             IEnumerable<Placemark> placemarks = await Geocoding.Default.GetPlacemarksAsync(latitude, longitude);
 
-            Placemark placemark = placemarks?.FirstOrDefault();
+            Placemark? placemark = placemarks?.FirstOrDefault();
 
             if (placemark != null)
             {
@@ -168,7 +187,6 @@ namespace AdanUI.Domain
             if (response != null)
             {
                 Debug.WriteLine($"GetGeocodeReverseDataOpenStreetAPI: Reponse is not null : {response.address.town} ");
-
                 if (response.address.town != null)
                 {
                     return response.address.town;
@@ -185,7 +203,6 @@ namespace AdanUI.Domain
             else
             {
                 Debug.WriteLine($"GetGeocodeReverseDataOpenStreetAPI: Reponse is null ");
-
                 return "Undefined";
             }
         }

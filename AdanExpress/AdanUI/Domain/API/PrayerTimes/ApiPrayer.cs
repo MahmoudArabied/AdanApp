@@ -119,13 +119,13 @@ namespace AdanUI.Domain.API.PrayerTimes
         /// <summary>
         /// Get the main request URL 
         /// </summary>
-        /// <param name="eTime">The time definition <see cref="enumApiTimesOption"/></param>
-        /// <param name="eLocationType">The location definition <see cref="enumLocationType"/></param>
+        /// <param name="eTime">The time definition <see cref="enumApiPrayerTimesOption"/></param>
+        /// <param name="eLocationType">The location definition <see cref="enumApiPrayerLocationType"/></param>
         /// <param name="arrLocationInput">Parameters of Location</param>
         /// <param name="iSchool">The school name</param>
         /// index_0: city, 
         /// Or: index_0: longitude, index_1:latitude, index_2: elevation
-        /// Or: index_0: IP addrese version 4</param>
+        /// Or: index_0: IP addrese version.4</param>
         /// <returns>The API request URL, it can be null</returns>
         public static string? getUrlRequest(enumApiPrayerTimesOption eTime, enumApiPrayerLocationType eLocationType, string[] arrLocationInput, string[] argsDateOptions, int iSchool = 4)
         {

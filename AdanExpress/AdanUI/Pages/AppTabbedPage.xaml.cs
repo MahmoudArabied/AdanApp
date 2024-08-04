@@ -7,8 +7,8 @@ public partial class AppTabbedPage
     public AppTabbedPage()
     {
         InitializeComponent();
-
         ThemeSettings();
+
         Application.Current.RequestedThemeChanged += (s, a) =>
         {
             // Respond to the theme change
@@ -25,7 +25,7 @@ public partial class AppTabbedPage
         AppTheme currentTheme = Application.Current.RequestedTheme;
         if (currentTheme == AppTheme.Light)
         {
-            Debug.WriteLine("ThemeSettings Light ");
+            Debug.WriteLine("AppTabbedPage ThemeSettings Light ");
             if (mergedDictionaries != null)
             {
                 Application.Current.UserAppTheme = AppTheme.Light;
@@ -35,7 +35,7 @@ public partial class AppTabbedPage
         }
         else if (currentTheme == AppTheme.Dark)
         {
-            Debug.WriteLine("ThemeSettings Dark ");
+            Debug.WriteLine("AppTabbedPage ThemeSettings Dark ");
 
             if (mergedDictionaries != null)
             {
@@ -46,7 +46,7 @@ public partial class AppTabbedPage
         }
         else
         {
-            Debug.WriteLine("ThemeSettings Unspecified ");
+            Debug.WriteLine("AppTabbedPage ThemeSettings Unspecified ");
 
             // Set Default Light
             if (mergedDictionaries != null)
@@ -55,7 +55,6 @@ public partial class AppTabbedPage
                 mergedDictionaries.Clear();
                 mergedDictionaries.Add(new Resources.Styles.LightTheme());
             }
-
         }
     }
 }

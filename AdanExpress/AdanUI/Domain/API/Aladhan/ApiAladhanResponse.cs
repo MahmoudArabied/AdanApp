@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdanUI.Domain.API.Aladhan
+﻿namespace AdanUI.Domain.API.Aladhan
 {
     /// <summary>
     /// Auto generated response based on defined json objects
     /// </summary>
     public class ApiAladhanResponse
     {
-        // ApiAladhanResponse myDeserializedClass = JsonConvert.DeserializeObject<ApiAladhanResponse>(myJsonResponse);
         public int code { get; set; }
         public string status { get; set; }
         public Data data { get; set; }

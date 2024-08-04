@@ -36,43 +36,28 @@ namespace AdanUI.ViewModels
         /// <summary>
         /// Dispatcher timer to run GEO updated after initialization
         /// </summary>
-        private IDispatcherTimer m_dtUpdatePrayTime;
+        private readonly IDispatcherTimer m_dtUpdatePrayTime;
 
         /// <summary>
         /// A dispatcher timer to update UI with current time settings 
         /// </summary>
-        private IDispatcherTimer m_dtUpdateUITimer;
-
-        /// <summary>
-        /// The current pray zone 
-        /// </summary>
-        private AppConstants.eTimes m_eCurrentPrayZone;
-
-        /// <summary>
-        /// The remain time for the next pray time
-        /// </summary>
-        private TimeSpan m_tsRemainForNextPray;
-
-        /// <summary>
-        /// The total time for the next pray time
-        /// </summary>
-        private TimeSpan m_tsToalTimeForNextPray;
+        private readonly IDispatcherTimer m_dtUpdateUITimer;
 
         /// <summary>
         /// The remain for the next pray as minutes 
         /// </summary>
-        private double m_dProgressRemaining;
+       // private double m_dProgressRemaining;
 
         /// <summary>
         /// The max value of the progress bar
         /// </summary>
-        private double m_dProgressMax;
+        //private double m_dProgressMax;
 
         public AdanViewModel()
         {
             initiateAdanCollection();
             m_strApplLocation = "Loading";
-            HomeBackgroundImageSource = "background_home.png";
+            QuranImageSource = "quran.png";
             m_strTimeInfo = CreateTimeInfo();
             UpdateLocationButEnabled = false;
             UpdateLocationButCommand = new DelegateCommand(OnUpdateLocationButClicked);
@@ -116,11 +101,11 @@ namespace AdanUI.ViewModels
         /// <summary>
         /// The background image of a given widget
         /// </summary>
-        private string m_strHomeBackgroudImage;
-        public string HomeBackgroundImageSource
-        {
-            get => m_strHomeBackgroudImage;
-            set => SetProperty(ref m_strHomeBackgroudImage, value);
+        private string m_strQuranBackgroudImage;
+        public string QuranImageSource
+                    {
+            get => m_strQuranBackgroudImage;
+            set => SetProperty(ref m_strQuranBackgroudImage, value);
         }
         #endregion Bind Variables
 
@@ -264,69 +249,6 @@ namespace AdanUI.ViewModels
         }
 
         /// <summary>
-        /// Get the assinged time for a give time pray
-        /// </summary>
-        /// <param name="eTime">The time type <see cref="AppConstants.eTimes"/></param>
-        /// <param name="times">The retrieved times from API <see cref="Times"/></param>
-        /// <returns></returns>
-        private string GetDefinedTime(eTimes eTime, Timings times)
-        {
-            return eTime switch
-            {
-                eTimes.Imsak => times.Imsak,
-                eTimes.Sunrise => times.Sunrise,
-                eTimes.Fajr => times.Fajr,
-                eTimes.Dhuhr => times.Dhuhr,
-                eTimes.Asr => times.Asr,
-                eTimes.Sunset => times.Sunset,
-                eTimes.Maghrib => times.Maghrib,
-                eTimes.Isha => times.Isha,
-                eTimes.Midnight => times.Midnight,
-                _ => "",
-            };
-        }
-
-        /// <summary>
-        /// Get the assigned image path for the given pray zone
-        /// </summary>
-        /// <param name="eTime">enum time <see cref="eTimes"/> </param>
-        /// <param name="bIsOn">Is the current time zone</param>
-        /// <returns></returns>
-        private string GetBackgroundImage(eTimes eTime, bool bIsOn)
-        {
-            return eTime switch
-            {
-                eTimes.Sunrise => bIsOn ? "sunrise_on.png" : "sunrise_off.png",
-                eTimes.Fajr => bIsOn ? "fajir_on.png" : "fajir_off.png",
-                eTimes.Dhuhr => bIsOn ? "dahur_on.png" : "dahur_off.png",
-                eTimes.Asr => bIsOn ? "asr_on.png" : "asr_off.png",
-                eTimes.Maghrib => bIsOn ? "maghrib_on.png" : "maghrib_off.png",
-                eTimes.Isha => bIsOn ? "isha_on.png" : "isha_off.png",
-                _ => bIsOn ? "time_adan_on.png" : "time_adan_off.png",
-            };
-        }
-
-        /// <summary>
-        /// Get the assigned image path for the given pray zone
-        /// </summary>
-        /// <param name="eTime">enum time <see cref="eTimes"/> </param>
-        /// <param name="bIsOn">Is the current time zone</param>
-        /// <returns></returns>
-        private eTimes GetNextTimePrayZone(eTimes eTime)
-        {
-            return eTime switch
-            {
-                eTimes.Fajr => eTimes.Sunrise,
-                eTimes.Sunrise => eTimes.Dhuhr,
-                eTimes.Dhuhr => eTimes.Asr,
-                eTimes.Asr => eTimes.Maghrib,
-                eTimes.Maghrib => eTimes.Isha,
-                eTimes.Isha => eTimes.Sunrise,
-                _ => eTimes.Sunrise,
-            };
-        }
-
-        /// <summary>
         /// Update related UI controls on Timer tick 
         /// </summary>
         /// <param name="sender"></param>
@@ -338,19 +260,22 @@ namespace AdanUI.ViewModels
             _ = Task.Run(UpdatePrayView);
         }
 
+        /// <summary>
+        /// Update the view of current pray time
+        /// </summary>
+        /// <returns></returns>
         private async Task UpdatePrayView()
         {
-            await MainThread.InvokeOnMainThreadAsync(async () =>
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 if (m_ApiAladhanResponse == null) { return; }
 
                 foreach (var item in AdanCollection)
                 {
-                    string strTime = GetDefinedTime(item.AdanTag, m_ApiAladhanResponse.data.timings);
+                    string strTime = Util.GetDefinedTime(item.AdanTag, m_ApiAladhanResponse.data.timings);
                     Debug.WriteLine($"Tage: {item.AdanTag} Time: {strTime}");
                     item.m_dtPrayDateTime = DateTime.Parse(strTime);
-                    item.AdanTime = GetDefinedTime(item.AdanTag, m_ApiAladhanResponse.data.timings);
-
+                    item.AdanTime = Util.GetDefinedTime(item.AdanTag, m_ApiAladhanResponse.data.timings);
                 }
 
                 UpdateCurrentPrayZone();
@@ -372,11 +297,11 @@ namespace AdanUI.ViewModels
             {
                 foreach (var item in AdanCollection)
                 {
-                    DateTime dtNextTimeZone = AdanCollection.First(x => x.AdanTag == GetNextTimePrayZone(item.AdanTag)).m_dtPrayDateTime;
+                    DateTime dtNextTimeZone = AdanCollection.First(x => x.AdanTag == Util.GetNextTimePrayZone(item.AdanTag)).m_dtPrayDateTime;
                     if (DateTime.Now >= item.m_dtPrayDateTime && DateTime.Now < dtNextTimeZone)
                     {
                         // Current Pray Zone
-                        item.BackgroundImage = GetBackgroundImage(item.AdanTag, true);
+                        item.BackgroundImage = Util.GetBackgroundImage(item.AdanTag, true);
                         item.ProgressColor = Colors.Gold;
                         item.BorderColor = Colors.Gold;
                         item.CardBackgroundColor = Colors.LawnGreen;
@@ -388,7 +313,7 @@ namespace AdanUI.ViewModels
                     }
                     else
                     {
-                        item.BackgroundImage = GetBackgroundImage(item.AdanTag, false);
+                        item.BackgroundImage = Util.GetBackgroundImage(item.AdanTag, false);
                         item.ProgressColor = Colors.White;
                         item.BorderColor = Colors.White;
                         item.CardBackgroundColor = Colors.White;

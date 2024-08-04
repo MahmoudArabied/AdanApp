@@ -9,6 +9,7 @@ namespace AdanUI.Models
             m_strAdanName = "";
             m_strAdanTime = "";
             m_progressColor = Colors.Wheat;
+            m_oBorderColor=Colors.White;
             m_strBackgroudImage = "";
             m_dtPrayDateTime = DateTime.Now;
             m_dProgressValue = 1;
