@@ -145,7 +145,7 @@ namespace AdanUI.Domain
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <returns></returns>
-        private async Task<string> GetGeocodeReverseDataGoogleAPI(double latitude = 47.673988, double longitude = -122.121513)
+        private static async Task<string> GetGeocodeReverseDataGoogleAPI(double latitude = 47.673988, double longitude = -122.121513)
         {
             IEnumerable<Placemark> placemarks = await Geocoding.Default.GetPlacemarksAsync(latitude, longitude);
 

@@ -103,7 +103,7 @@ namespace AdanUI.ViewModels
         /// </summary>
         private string m_strQuranBackgroudImage;
         public string QuranImageSource
-                    {
+        {
             get => m_strQuranBackgroudImage;
             set => SetProperty(ref m_strQuranBackgroudImage, value);
         }
@@ -144,12 +144,21 @@ namespace AdanUI.ViewModels
             return oSb.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
         private void OnUpdateLocationButClicked(object obj)
         {
             Debug.WriteLine("AdanViewModel: OnUpdateLocationButClicked");
             _ = Task.Run(GetCurrentLocation);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnUpdatePrayTime_Tick(object? sender, EventArgs e)
         {
             Debug.WriteLine("AdanViewMode: OnUpdatePrayTime_Tick ");
@@ -157,6 +166,9 @@ namespace AdanUI.ViewModels
             _ = Task.Run(GetCurrentLocation);
         }
 
+        /// <summary>
+        /// Initiate the default values of adan model
+        /// </summary>
         private void initiateAdanCollection()
         {
             AdanCollection = new ObservableCollection<AdanModel>();
@@ -172,11 +184,11 @@ namespace AdanUI.ViewModels
                         AdanTag = timeType,
                         AdanName = timeType.ToString(),
                         AdanTime = "",//DateTime.Now.ToString(TimeOnlyFormat),
-                        ProgressColor = Colors.White,
+                        ProgressColor = GetDefaultBackgroundColor(false),
                         ProgressValue = 0,
                         ProgressIsVisible = false,
-                        BorderColor = Colors.White,
-                        CardBackgroundColor = Colors.White,
+                        BorderColor = GetDefaultBackgroundColor(false),
+                        CardBackgroundColor = GetDefaultBackgroundColor(false),
                         BackgroundImage = "time_adan_off.png"
 
                     });
@@ -191,6 +203,30 @@ namespace AdanUI.ViewModels
             AdanCollection.First(x => x.AdanTag == eTimes.Isha).BackgroundImage = "isha_off.png";
         }
 
+        /// <summary>
+        /// Get the default assigned color based on current theme
+        /// </summary>
+        /// <returns></returns>
+        private Color GetDefaultBackgroundColor(bool bIsCurrentZone)
+        {
+            AppTheme currentTheme = Application.Current.RequestedTheme;
+            if (currentTheme == AppTheme.Light)
+            {
+                return bIsCurrentZone ? Colors.LawnGreen : Colors.White;
+            }
+            else if (currentTheme == AppTheme.Dark)
+            {
+                return bIsCurrentZone ? Colors.Green : Colors.Black;
+            }
+            else
+            {
+                return bIsCurrentZone ? Colors.LawnGreen : Colors.White;
+            }
+        }
+
+        /// <summary>
+        /// Update the location fields
+        /// </summary>
         public async void GetCurrentLocation()
         {
             m_dtUpdatePrayTime.Stop();
@@ -215,6 +251,10 @@ namespace AdanUI.ViewModels
             });
         }
 
+        /// <summary>
+        /// Send API request to get the current adan times for today
+        /// </summary>
+        /// <returns></returns>
         private async Task GetPrayUpdatesFromAPI()
         {
             if (m_oLocationUtil.m_oLocation == null)
@@ -228,7 +268,7 @@ namespace AdanUI.ViewModels
 
             string strLocationInput = "latitude=" + m_oLocationUtil.m_oLocation.Latitude.ToString(CultureInfo.InvariantCulture) +
                 "&longitude=" + m_oLocationUtil.m_oLocation.Longitude.ToString(CultureInfo.InvariantCulture);
-            string? strUrl = ApiAladhan.getUrlRequest(ApiAladhan.enumApiAladhanRequestOption.timings, DateTime.Today.ToString(Util.DateTimeAPIFormat2), strLocationInput);
+            string? strUrl = ApiAladhan.GetUrlRequest(ApiAladhan.enumApiAladhanRequestOption.timings, DateTime.Today.ToString(Util.DateTimeAPIFormat2), strLocationInput);
             s_httpClient.DefaultRequestHeaders.Accept.Clear();
             string streamString = await s_httpClient.GetStringAsync(strUrl);
             m_ApiAladhanResponse = JsonSerializer.Deserialize<ApiAladhanResponse>(streamString);
@@ -304,7 +344,7 @@ namespace AdanUI.ViewModels
                         item.BackgroundImage = Util.GetBackgroundImage(item.AdanTag, true);
                         item.ProgressColor = Colors.Gold;
                         item.BorderColor = Colors.Gold;
-                        item.CardBackgroundColor = Colors.LawnGreen;
+                        item.CardBackgroundColor = GetDefaultBackgroundColor(true);
                         double dRemaingMinutes = (dtNextTimeZone - DateTime.Now).TotalMinutes;
                         double dDuration = (dtNextTimeZone - item.m_dtPrayDateTime).TotalMinutes;
                         item.ProgressValue = (dDuration - dRemaingMinutes) / dDuration;
@@ -314,9 +354,9 @@ namespace AdanUI.ViewModels
                     else
                     {
                         item.BackgroundImage = Util.GetBackgroundImage(item.AdanTag, false);
-                        item.ProgressColor = Colors.White;
-                        item.BorderColor = Colors.White;
-                        item.CardBackgroundColor = Colors.White;
+                        item.ProgressColor = GetDefaultBackgroundColor(false);
+                        item.BorderColor = GetDefaultBackgroundColor(false);
+                        item.CardBackgroundColor = GetDefaultBackgroundColor(false);
                         item.ProgressValue = 0;
                         item.ProgressIsVisible = false;
                     }

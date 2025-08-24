@@ -6,7 +6,7 @@
             android:TabbedPage.ToolbarPlacement="Bottom"
             x:Class="AdanUI.Pages.AppTabbedPage">
 
-    <NavigationPage Title="Home" IconImageSource="{StaticResource Home}" Shell.NavBarIsVisible="False">
+    <NavigationPage Title="Home" Shell.NavBarIsVisible="False">
         <x:Arguments>
             <pages:MainPage />
         </x:Arguments>

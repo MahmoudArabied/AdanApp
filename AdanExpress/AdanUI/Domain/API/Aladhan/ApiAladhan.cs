@@ -27,12 +27,10 @@
         {
             /// <summary>
             /// Returns all prayer times for a specific calendar month
-            /// 
             /// "latitude" (decimal) -  The decimal value for the latitude co-ordinate of the location you want the time computed for. Example: 51.75865125
             /// "longitude" (decimal) - The decimal value for the longitude co-ordinate of the location you want the time computed for. Example: -1.25387785
             /// "month" (number) - Optional.A gregorian calendar month.Example: 8 or 08 for August.If not specified, an annual calendar will be returned.
             /// "year" (number) - A gregorian calendar year. Example: 2014
-            /// 
             /// Example
             /// https://api.aladhan.com/v1/calendar/2024/4?latitude=51.508515&longitude=-0.1254872&method=2
             /// </summary>
@@ -216,7 +214,6 @@
         /// index_0: city, 
         /// Or: index_0: longitude, index_1:latitude, index_2: elevation
         /// Or: index_0: IP addrese version 4</param>
-        /// 
         /// Prayer Times Calendar - https://api.aladhan.com/v1/calendar/:year/:month
         /// Prayer Times Calendar by address - https://api.aladhan.com/v1/calendarByAddress/:year/:month
         /// Prayer Times Calendar by city - https://api.aladhan.com/v1/calendarByCity/:year/:month
@@ -228,7 +225,7 @@
         /// Timings By Address - https://api.aladhan.com/v1/timingsByAddress/:date
         /// Timings By City - https://api.aladhan.com/v1/timingsByCity/:date
         /// <returns>The API request URL, it can be null</returns>
-        public static string? getUrlRequest(enumApiAladhanRequestOption eRequestOption, string argsDateOptions, string argLocationInput, int iMethod = 3)
+        public static string? GetUrlRequest(enumApiAladhanRequestOption eRequestOption, string argsDateOptions, string argLocationInput, int iMethod = 3)
         {
             if (!string.IsNullOrEmpty(argLocationInput) && !string.IsNullOrEmpty(argLocationInput))
             {
